@@ -1,0 +1,20 @@
+*egg-info/
+*.pyc
+
+# clion related
+*.idea/
+*cmake-build-debug*/
+*debug/
+*release/
+lib/
+bin/
+
+# vscode
+*.vscode/
+
+# cmake build
+*build/
+*install/
+unit_test/test_data/*.txt
+unit_test/test_data/*.bin
+unit_test/test_data/*.json

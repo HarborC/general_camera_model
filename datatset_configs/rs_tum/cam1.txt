@@ -1,0 +1,6 @@
+# camera_name 
+cam1
+# camera_model: OPENCV_FISHEYE | model_id camera_width camera_height
+3 1280 1024
+# params list : fx, fy, cx, cy, k1, k2, k3, k4
+739.165476 739.143845 625.826167 517.337097 0.019328 0.006784 -0.008659 0.005189 
