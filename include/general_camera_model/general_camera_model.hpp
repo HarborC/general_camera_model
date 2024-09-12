@@ -12,11 +12,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/json.hpp>
 #include <cereal/cereal.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
 
 namespace general_camera_model {
 

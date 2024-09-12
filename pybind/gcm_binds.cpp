@@ -17,7 +17,7 @@ PYBIND11_MODULE(pygcm, m) {
   using namespace pybind11::literals;
   m.doc() = "python interface for pygcm";
 
-  py::class_<GeneralCameraModel>(m, "CameraModel")
+  py::class_<GeneralCameraModel, GeneralCameraModel::Ptr>(m, "CameraModel")
       .def(py::init<>())
       .def("load_config_file", &GeneralCameraModel::loadConfigFile)
       .def("save_config_file", &GeneralCameraModel::saveConfigFile)

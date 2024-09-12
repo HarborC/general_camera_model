@@ -35,8 +35,7 @@ target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${CERES_LIBRARIES})
 target_include_directories(${PROJECT_NAME} PUBLIC 
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                            $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/thirdparty>
-                           $<INSTALL_INTERFACE:include>
-                           $<INSTALL_INTERFACE:thirdparty>)
+                           $<INSTALL_INTERFACE:include>)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # Unit test
@@ -53,7 +52,7 @@ install(
 
 install(
   DIRECTORY thirdparty/
-  DESTINATION thirdparty/
+  DESTINATION include/
 )
 
 install(TARGETS ${PROJECT_NAME}

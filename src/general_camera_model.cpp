@@ -5,6 +5,11 @@
 #include <sstream>
 #include <unordered_map>
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
+
 namespace general_camera_model {
 
 // initialize
