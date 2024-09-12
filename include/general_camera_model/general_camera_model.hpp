@@ -144,7 +144,7 @@ public:
   bool setMask(std::string mask_path);
   bool isPixelVaild(const Eigen::Matrix<double, 2, 1> &pixel) const;
 
-  std::vector<double> getParams() { return params_; }
+  std::vector<double> getParams() const { return params_; }
   double getParamValue(const size_t idx) { 
     if (idx >= params_.size()) {
       throw std::out_of_range("Index out of range");
