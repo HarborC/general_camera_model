@@ -204,6 +204,8 @@ public:
   // only for ScaramuzzaCameraModel
   void generateExtraParams();
 
+  std::vector<Eigen::Vector2d> getCornerPoints() const;
+
 public:
   // Simple Pinhole camera model.
   //

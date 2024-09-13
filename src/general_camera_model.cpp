@@ -503,4 +503,13 @@ bool GeneralCameraModel::isPixelVaild(
   return true;
 }
 
+std::vector<Eigen::Vector2d> GeneralCameraModel::getCornerPoints() const {
+  std::vector<Eigen::Vector2d> corner_points;
+  corner_points.emplace_back(0, 0);
+  corner_points.emplace_back(width_ - 1, 0);
+  corner_points.emplace_back(width_ - 1, height_ - 1);
+  corner_points.emplace_back(0, height_ - 1);
+  return corner_points;
+}
+
 } // namespace general_camera_model
