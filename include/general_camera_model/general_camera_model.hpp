@@ -12,7 +12,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <cereal/cereal.hpp>
+#include <cereal/cereal_utils.hpp>
 
 namespace general_camera_model {
 
@@ -90,6 +90,8 @@ public:
   typedef std::shared_ptr<GeneralCameraModel> Ptr;
   typedef std::shared_ptr<const GeneralCameraModel> ConstPtr;
 
+  Ptr makeShared() { return std::make_shared<GeneralCameraModel>(*this); }
+
 public:
   GeneralCameraModel() {}
   ~GeneralCameraModel() {}
@@ -105,6 +107,7 @@ public:
   void saveToCerealJsonFile(const std::string &filename) const;
   bool loadFromCerealBinaryFile(const std::string &filename);
   void saveToCerealBinaryFile(const std::string &filename) const;
+  void saveMaskToImage(const std::string &filename) const;
 
   std::string info() const;
 
@@ -138,15 +141,16 @@ public:
   cv::Mat mask() { return camera_mask_.clone(); }
   bool hasMask() const { return !camera_mask_.empty(); }
   bool setMask(std::string mask_path);
+  void initDefaultMask();
   bool isPixelVaild(const Eigen::Matrix<double, 2, 1> &pixel) const;
 
   std::vector<double> getParams() const { return params_; }
-  double getParamValue(const size_t idx) { 
+  double getParamValue(const size_t idx) {
     if (idx >= params_.size()) {
       throw std::out_of_range("Index out of range");
       return 0;
     }
-    return params_[idx]; 
+    return params_[idx];
   }
 
   void cameraModelInitializeParams(const int model_id,

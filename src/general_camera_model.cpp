@@ -5,10 +5,7 @@
 #include <sstream>
 #include <unordered_map>
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
+#include "io_utils.h"
 
 namespace general_camera_model {
 
@@ -225,22 +222,45 @@ bool GeneralCameraModel::loadFromTxtFile(const std::string &filename) {
   return true;
 }
 
+void GeneralCameraModel::saveMaskToImage(const std::string &filename) const {
+  if (camera_mask_.empty()) {
+    return;
+  }
+
+  cv::imwrite(filename, camera_mask_);
+}
+
 bool GeneralCameraModel::loadConfigFile(const std::string &filename) {
   if (filename == "") {
     return false;
   }
 
+  bool success = false;
+
   std::string ext = filename.substr(filename.find_last_of(".") + 1);
   if (ext == "json") {
     // 如果文件后缀是json，则使用json格式读取
-    return loadFromCerealJsonFile(filename);
+    success = loadFromCerealJsonFile(filename);
   } else if (ext == "txt") {
     // 如果文件后缀是txt，则使用txt格式读取
-    return loadFromTxtFile(filename);
+    success = loadFromTxtFile(filename);
   } else {
     // 默认使用二进制格式读取
-    return loadFromCerealBinaryFile(filename);
+    success = loadFromCerealBinaryFile(filename);
   }
+
+  if (success) {
+    std::string basename, ext;
+    Utils::SplitFileExtension(filename, &basename, &ext);
+    std::string mask_filename = basename + "_mask.png";
+    if (Utils::ExistsFile(mask_filename)) {
+      camera_mask_ = cv::imread(mask_filename, cv::IMREAD_GRAYSCALE);
+    } else {
+      initDefaultMask();
+    }
+  }
+
+  return success;
 }
 
 void GeneralCameraModel::saveConfigFile(const std::string &filename) const {
@@ -257,6 +277,13 @@ void GeneralCameraModel::saveConfigFile(const std::string &filename) const {
   } else {
     // 默认使用二进制格式保存
     saveToCerealBinaryFile(filename);
+  }
+
+  if (!camera_mask_.empty()) {
+    std::string basename, ext;
+    Utils::SplitFileExtension(filename, &basename, &ext);
+    std::string mask_filename = basename + "_mask.png";
+    cv::imwrite(mask_filename, camera_mask_);
   }
 }
 
@@ -510,6 +537,10 @@ std::vector<Eigen::Vector2d> GeneralCameraModel::getCornerPoints() const {
   corner_points.emplace_back(width_ - 1, height_ - 1);
   corner_points.emplace_back(0, height_ - 1);
   return corner_points;
+}
+
+void GeneralCameraModel::initDefaultMask() {
+  camera_mask_ = cv::Mat::ones(height_, width_, CV_8UC1) * 255;
 }
 
 } // namespace general_camera_model
