@@ -543,4 +543,8 @@ void GeneralCameraModel::initDefaultMask() {
   camera_mask_ = cv::Mat::ones(height_, width_, CV_8UC1) * 255;
 }
 
+void GeneralCameraModel::setMask(const cv::Mat& mask) {
+  camera_mask_ = mask.clone();
+}
+
 } // namespace general_camera_model

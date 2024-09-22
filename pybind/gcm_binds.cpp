@@ -37,14 +37,44 @@ PYBIND11_MODULE(pygcm, m) {
       .def("params_value", &GeneralCameraModel::getParamValue)
       .def("set_params", &GeneralCameraModel::setParams)
       .def("params_info", &GeneralCameraModel::paramsInfo)
-      .def("initialize_params", &GeneralCameraModel::cameraModelInitializeParams)
+      .def("initialize_params",
+           &GeneralCameraModel::cameraModelInitializeParams)
       .def("plane_to_space", &GeneralCameraModel::planeToSpace2)
       .def("space_to_plane", &GeneralCameraModel::spaceToPlane2)
       .def("generate_extra_params", &GeneralCameraModel::generateExtraParams)
       .def("mask", &GeneralCameraModel::mask)
       .def("has_mask", &GeneralCameraModel::hasMask)
-      .def("set_mask", &GeneralCameraModel::setMask)
-      .def("is_pixel_valid", &GeneralCameraModel::isPixelVaild);
+      .def("set_mask",
+           static_cast<bool (GeneralCameraModel::*)(std::string mask_path)>(
+               &GeneralCameraModel::setMask),
+           "set mask from path", py::arg("mask_path"))
+      .def("set_mask",
+           static_cast<void (GeneralCameraModel::*)(const cv::Mat &mask)>(
+               &GeneralCameraModel::setMask),
+           "set mask from cv::Mat", py::arg("mask"))
+      .def("is_pixel_valid", &GeneralCameraModel::isPixelVaild)
+      // 序列化支持
+      .def("__getstate__",
+           [](const GeneralCameraModel &self) {
+             // 返回可序列化的状态，使用pybind11::dict封装
+             pybind11::dict state;
+             state["camera_name"] = self.cameraName();
+             state["model_id"] = self.modelId();
+             state["width"] = self.width();
+             state["height"] = self.height();
+             state["params"] = self.getParams();
+             state["mask"] = self.mask();
+             return state;
+           })
+      .def("__setstate__", [](GeneralCameraModel &self, pybind11::dict state) {
+        // 从字典恢复对象的状态
+        self.setCameraName(state["camera_name"].cast<std::string>());
+        self.setModelId(state["model_id"].cast<int>());
+        self.setWidth(state["width"].cast<int>());
+        self.setHeight(state["height"].cast<int>());
+        self.setParams(state["params"].cast<std::vector<double>>());
+        self.setMask(state["mask"].cast<cv::Mat>());
+      });
 
   m.def("init_undistort_rectify_map", &initUndistortRectifyMap,
         "A fuction to calculate two camera maps", py::arg("old_camera"),

@@ -138,9 +138,10 @@ public:
   void setParams(const std::vector<double> &p);
   std::string paramsInfo() const;
 
-  cv::Mat mask() { return camera_mask_.clone(); }
+  cv::Mat mask() const { return camera_mask_.clone(); }
   bool hasMask() const { return !camera_mask_.empty(); }
   bool setMask(std::string mask_path);
+  void setMask(const cv::Mat& mask);
   void initDefaultMask();
   bool isPixelVaild(const Eigen::Matrix<double, 2, 1> &pixel) const;
 
