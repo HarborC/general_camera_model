@@ -1,9 +1,9 @@
 find_package(pybind11 REQUIRED)
 set(PYBIND11_LTO_CXX_FLAGS "")
 
-message(STATUS "Python_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+message(STATUS "Python_EXECUTABLE: ${Python_EXECUTABLE}")
 execute_process(
-    COMMAND "${PYTHON_EXECUTABLE}" -c "import numpy; print(numpy.get_include())"
+    COMMAND "${Python_EXECUTABLE}" -c "import numpy; print(numpy.get_include())"
     OUTPUT_VARIABLE NUMPY_INCLUDE_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )

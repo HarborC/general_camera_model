@@ -1,0 +1,20 @@
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+if (OpenCV_FOUND)
+  message("OpenCV has found.")
+  message("OpenCV_VERSION: ${OpenCV_VERSION}")
+else()
+  message("ERROR: OpenCV could not be found.")
+endif()
+
+find_package(Ceres REQUIRED)
+include_directories(${CERES_INCLUDE_DIRS})
+
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+set(Python_EXECUTABLE /opt/conda/envs/slam4labeling/bin/python)
+find_package(Python COMPONENTS Interpreter Development REQUIRED)
+include_directories(${Python_INCLUDE_DIRS})
+message(STATUS "Python_INCLUDE_DIRS: ${Python_INCLUDE_DIRS}")
+message(STATUS "Python_LIBRARIES: ${Python_LIBRARIES}")

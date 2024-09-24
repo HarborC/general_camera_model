@@ -1,29 +1,37 @@
 cmake_minimum_required(VERSION 3.10)
 project(general_camera_model)
 
-# build type
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release)
-endif()
+################################################################################
+# CMAKE configuration
+################################################################################
 
 add_definitions(-w)
+add_definitions(-DCOMPILEDWITHC17)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse4.2")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_BUILD_TYPE "Release")
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
-if (OpenCV_FOUND)
-  message("OpenCV has found.")
-  message("OpenCV_VERSION: ${OpenCV_VERSION}")
-else()
-  message("ERROR: OpenCV could not be found.")
-endif()
+set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS}" "-std=c++17" )
+set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+set(CMAKE_CUDA_COMPILER "nvcc")
+set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
+set(CMAKE_CUDA_FLAGS_DEBUG "-g")
+set(CMAKE_CUDA_FLAGS_RELEASE "-O3")
+set(CMAKE_CUDA_ARCHITECTURES 80)
+set(CUDA_NVCC_FLAGS "-rdc=true")
 
-find_package(Ceres REQUIRED)
-include_directories(${CERES_INCLUDE_DIRS})
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pthread -Wall -fPIC ${AVX_FLAGS}") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -Wall -fPIC ${AVX_FLAGS}")
 
-find_package(Eigen3 REQUIRED)
-include_directories(${EIGEN3_INCLUDE_DIR})
+add_definitions(-DBOOST_EXCEPTION_DISABLE
+                -DBOOST_GEOMETRY_OVERLAY_NO_THROW
+                -DEIGEN_NO_DEBUG
+                )
+                
+set(ENV{LD_LIBRARY_PATH} "/usr/local/lib/:$ENV{LD_LIBRARY_PATH}")
+
+include(${PROJECT_SOURCE_DIR}/cmake/find_deps.cmake)
 
 include_directories(
   ${PROJECT_SOURCE_DIR}/include
