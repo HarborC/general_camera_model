@@ -10,7 +10,7 @@ endif()
 find_package(Ceres REQUIRED)
 include_directories(${CERES_INCLUDE_DIRS})
 
-find_package(Eigen3 REQUIRED)
+find_package(Eigen3 3.4 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 set(Python_EXECUTABLE /opt/conda/envs/slam4labeling/bin/python)
